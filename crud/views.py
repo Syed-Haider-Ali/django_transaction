@@ -7,13 +7,13 @@ product_controller = ProductController()
 class ProductView(ModelViewSet):
 
     def create(self, request):
-        return product_controller.create(request)
+        return product_controller.create_product(request)
 
     def fetch(self, request):
-        return product_controller.fetch(request)
+        return product_controller.fetch_product(request)
 
     def update(self, request):
-        return product_controller.update(request)
+        return product_controller.update_product(request)
 
     def destroy(self, request):
-        return product_controller.destroy(request)
+        return product_controller.destroy_product(request)
