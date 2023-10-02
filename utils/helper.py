@@ -1,3 +1,4 @@
+import ast
 from django.db import models
 from rest_framework.response import Response
 from rest_framework.utils.serializer_helpers import ReturnList
@@ -6,7 +7,7 @@ from rest_framework.utils.serializer_helpers import ReturnList
 
 class TimeStapms(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now = True)
+    updated_at = models.DateTimeField(auto_now=True)
     class Meta:
         abstract = True
 
@@ -24,9 +25,7 @@ def get_first_error_message_from_serializer_errors(serialized_errors, default_me
     if not serialized_errors:
         return default_message
     try:
-
         serialized_error_dict = serialized_errors
-
         # ReturnList of serialized_errors when many=True on serializer
         if isinstance(serialized_errors, ReturnList):
             serialized_error_dict = serialized_errors[0]
@@ -40,5 +39,24 @@ def get_first_error_message_from_serializer_errors(serialized_errors, default_me
             return serialized_error_dict[serialized_errors_keys[0]][0]
 
     except Exception as e:
-        # logger.error(f"Error parsing serializer errors:{e}")
         return default_message
+
+
+def get_params(name, instance, kwargs):
+    instance = check_for_one_or_many(instance)
+    if type(instance) == list or type(instance) == tuple:
+        kwargs[f"{name}__in"] = instance
+    else:
+        kwargs[f"{name}"] = instance
+
+    return kwargs
+
+def check_for_one_or_many(instances):
+    try:
+        instance = ast.literal_eval(instances)
+        print('from check_for_one_or_many')
+        print(instance)
+        return instance
+    except Exception as e:
+        print(e)
+        return instances
