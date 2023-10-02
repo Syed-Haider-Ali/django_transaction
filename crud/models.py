@@ -13,7 +13,7 @@ class Product(TimeStapms):
     manufacturing_date = models.DateField()
 
 class Images(TimeStapms):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_images')
     image = models.ImageField(upload_to='images/')
 
 
