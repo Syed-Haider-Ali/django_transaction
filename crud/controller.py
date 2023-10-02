@@ -38,7 +38,13 @@ class ProductController:
 
 
     def fetch_product(self, request):
-        pass
+        try:
+            records = self.product_serializer.Meta.model.objects.all()
+            response = self.product_serializer(records).data
+            return create_response(response, SUCCESSFUL, 200)
+
+        except Exception as e:
+            return create_response({'error':str(e)}, UNSUCCESSFUL, 500)
 
     def update_product(self, request):
         pass
