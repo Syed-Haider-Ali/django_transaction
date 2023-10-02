@@ -11,7 +11,7 @@ class ProductController:
         try:
             serialized_product = self.product_serializer(data=request.data)
 
-            if serialized_product.is_valid:
+            if serialized_product.is_valid():
                 with transaction.atomic():
                     response_data = serialized_product.save()
 
@@ -22,7 +22,7 @@ class ProductController:
                                 'image': i
                             }
                             serialized_image = self.image_serializer(data=image)
-                            if serialized_image.is_valid:
+                            if serialized_image.is_valid():
                                 serialized_image.save()
                             else:
                                 return create_response({}, get_first_error_message_from_serializer_errors(
@@ -53,7 +53,7 @@ class ProductController:
                 instance = self.product_serializer.Meta.model.objects.filter(id=request.data.get('id')).first()
                 if instance:
                     serialized_product = self.product_serializer(instance, data=request.data, partial=True)
-                    if serialized_product.is_valid:
+                    if serialized_product.is_valid():
                         with transaction.atomic():
                             response_data = serialized_product.save()
 
@@ -71,7 +71,7 @@ class ProductController:
                                         'image': i
                                     }
                                     serialized_image = self.image_serializer(data=image)
-                                    if serialized_image.is_valid:
+                                    if serialized_image.is_valid():
                                         serialized_image.save()
                                     else:
                                         return create_response({}, get_first_error_message_from_serializer_errors(
