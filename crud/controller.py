@@ -89,4 +89,19 @@ class ProductController:
 
 
     def destroy_product(self, request):
-        pass
+        try:
+            if "id" in request.data:
+                instance = self.product_serializer.Meta.model.objects.filter(id=request.data.get('id')).first()
+                if instance:
+                    instance_images = instance.product_images.all()
+                    with transaction.atomic():
+                        for image in instance_images:
+                            image.delete()
+                        instance.delete()
+                else:
+                    return create_response({}, NOT_FOUND, 404)
+            else:
+                return create_response({}, ID_NOT_PROVIDED, 400)
+
+        except Exception as e:
+            return create_response({'error': str(e)}, UNSUCCESSFUL, 500)
